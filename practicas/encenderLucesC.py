@@ -30,27 +30,23 @@ def solve(data):
     print("{:.2f}".format(beneficio))
     print()
 
-
 N = int(input())  # número de concursantes
+
 for _ in range(N):
-    caracteristica = input()  # cualidad que más valora el concursante
-    tiempo_maximo = int(input())  # tiempo máximo que tiene el concursante
-    T = int(input())  # el número de parejas posibles
+    caracteristica = input().strip()  # Cualidad que más valora el concursante
+    tiempo_maximo = int(input())  # Tiempo máximo que tiene el concursante
+    T = int(input())  # Número de parejas posibles
 
     parejas = []
 
-    for _ in range(T):
-        print("Esperando entrada para pareja...")
+    for i in range(T):
         datos_pareja = input().split()
-        print("Datos de la pareja:", datos_pareja)
-
         nombre = datos_pareja[0]
         belleza = int(datos_pareja[1])
         inteligencia = int(datos_pareja[2])
         amabilidad = int(datos_pareja[3])
         tiempo = int(datos_pareja[4])
 
-        # creamos el diccionario
         pareja = {
             'nombre': nombre,
             'b': belleza,
@@ -60,17 +56,13 @@ for _ in range(N):
         }
         parejas.append(pareja)
 
-    # agrupamos los datos en el diccionario
     data = {
         'tiempo_maximo': tiempo_maximo,
         'caracteristica': caracteristica,
         'parejas': parejas
     }
 
-    # llamamos a la función solve para resolver el problema para este concursante
-    print(data)
-
-print("Programa completado.")
+solve(data)  # Llamar a la función de resolución
 
 #entrada 1
 # 2
