@@ -1,44 +1,47 @@
 def solve(data):
-    #ordenamos en función del tiempo para seducir a la persona
-    parejas = sorted(data['parejas'], key=lambda x: x['t'])
+    # Creamos el mapeo para las cualidades con las claves correctas
+    cualidades = {"beauty": 'b', "intelligence": 'i', "kindness": 'k'}
+    clave = cualidades[data['caracteristica']]  # Extraemos la clave correspondiente
 
-    #inicializamos las variables
+    # Ordenamos las parejas según el beneficio por tiempo de forma descendente
+    parejas = sorted(data['parejas'], key=lambda x: (-x[clave] / x['t'], -x[clave]))
+
+    # Inicializamos las variables
     seleccionados = []
     beneficio = 0.0
     tiempo_restante = data['tiempo_maximo']
 
-    #mapeamos las caracteristicas
-    caracteristicas = {
-        'kindness': 'k',
-        'intelligence': 'i',
-        'beauty': 'b'
-    }
-
-    #recorremos las parejas
+    # Recorremos las parejas seleccionadas
     for pareja in parejas:
+        nombre = pareja['nombre']
+        valor = pareja[clave]
         tiempo = pareja['t']
+
         if tiempo_restante >= tiempo:
-            seleccionados.append(pareja['nombre'])
-            beneficio += pareja[caracteristicas[data['caracteristica']]]
+            seleccionados.append(nombre)
+            beneficio += valor
             tiempo_restante -= tiempo
         else:
-            beneficio += (pareja[caracteristicas[data['caracteristica']]] * tiempo_restante) / tiempo
+            beneficio += (valor * tiempo_restante) / tiempo  # Si no hay suficiente tiempo
+            seleccionados.append(nombre)
             break
 
-    #mostramos los resultados
+    # Mostramos los resultados
     print(' '.join(seleccionados))
     print("{:.2f}".format(beneficio))
     print()
 
-N = int(input())  # número de concursantes
+
+N = int(input())  # Número de concursantes
 
 for _ in range(N):
     caracteristica = input().strip()  # Cualidad que más valora el concursante
     tiempo_maximo = int(input())  # Tiempo máximo que tiene el concursante
     T = int(input())  # Número de parejas posibles
 
-    parejas = []
+    parejas = []  # Lista para almacenar las parejas disponibles
 
+    # Recogemos la información de las parejas
     for i in range(T):
         datos_pareja = input().split()
         nombre = datos_pareja[0]
@@ -56,13 +59,14 @@ for _ in range(N):
         }
         parejas.append(pareja)
 
+    # Creamos el diccionario con la información del concursante
     data = {
         'tiempo_maximo': tiempo_maximo,
         'caracteristica': caracteristica,
         'parejas': parejas
     }
 
-solve(data)  # Llamar a la función de resolución
+    solve(data)
 
 #entrada 1
 # 2

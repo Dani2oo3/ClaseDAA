@@ -1,3 +1,5 @@
+import heapq
+
 def solve(data):
     N, M = data['N'], data['M']
     graph = {i: [] for i in range(N)}
@@ -8,42 +10,40 @@ def solve(data):
 
     S, E = data['S'], data['E']
 
-    # Algoritmo de Dijkstra
-    pq = [(0, S, [])]  # (distancia acumulada, nodo actual, camino recorrido)
-    visited = set()
-
-    def insert_pq(pq, item):
-        """Inserta un nuevo item en pq de forma ordenada."""
-        low, high = 0, len(pq)
-        while low < high:
-            mid = (low + high) // 2
-            if pq[mid][0] < item[0]:
-                low = mid + 1
-            else:
-                high = mid
-        pq.insert(low, item)
+    # Algoritmo de Dijkstra usando heapq
+    pq = [(0, S)]  # (distancia acumulada, nodo actual)
+    distances = {i: float('inf') for i in range(N)}
+    distances[S] = 0
+    previous = {i: None for i in range(N)}
 
     while pq:
-        # Extraemos el nodo con la menor distancia
-        dist, node, path = pq.pop(0)
+        current_distance, current_node = heapq.heappop(pq)
 
-        if node in visited:
-            continue
+        if current_node == E:
+            break
 
-        visited.add(node)
-        path = path + [node]
+        for neighbor, weight in graph[current_node]:
+            distance = current_distance + weight
+            if distance < distances[neighbor]:
+                distances[neighbor] = distance
+                previous[neighbor] = current_node
+                heapq.heappush(pq, (distance, neighbor))
 
-        if node == E:
-            print(dist)
-            print(" ".join(map(str, path)))
-            return
+    if distances[E] == float('inf'):
+        print("-1")  # No hay camino
+        return
 
-        for neighbor, weight in graph[node]:
-            if neighbor not in visited:
-                # Insertamos en la cola de prioridad de forma ordenada
-                insert_pq(pq, (dist + weight, neighbor, path))
+    # Reconstrucción del camino
+    path = []
+    node = E
+    while node is not None:
+        path.append(node)
+        node = previous[node]
+    path.reverse()
 
-    print("-1")  # No hay camino
+    print(distances[E])
+    print(" ".join(map(str, path)))
+
 
 # Entrada
 N, M = map(int, input().split())
